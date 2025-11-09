@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101624" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>שבת שלום TV</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { display: ["'Rubik'", "system-ui", "sans-serif"] },
+          colors: { midnight: "#101624", aurum: "#F2C94C" }
+        },
+      },
+    };
+  </script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg-gradient: radial-gradient(135% 180% at 72% 12%, #453372 0%, #1a1f31 45%, #080911 100%);
+      --panel: rgba(22, 24, 42, 0.96);
+      --panel-border: rgba(129, 136, 196, 0.28);
+      --panel-shadow: 0 32px 70px rgba(6, 9, 21, 0.6);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.82);
+      --accent-primary: #8a7dff;
+      --accent-secondary: #f6c870;
+      --accent-tertiary: #58d6ff;
+      --divider: rgba(124, 132, 196, 0.22);
+    }
+
+    body {
+      font-family: "Rubik", system-ui, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-primary);
+      transition: background 1s ease, color 1s ease;
+      overflow-x: hidden;
+    }
+
+    body.day-mode {
+      background: radial-gradient(160% 180% at 38% -10%, #eef3ff 0%, #d4dcff 45%, #a8b7ff 100%);
+      color: #0f172a;
+    }
+
+    [class*="text-white/"] {
+      color: rgba(255, 255, 255, 0.94) !important;
+    }
+
+    /* שבת שלום overlay */
+    body.shabbat-active::after {
+      content: "שבת שלום 🌙";
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 25, 0.85);
+      color: #f2c94c;
+      font-size: 6rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    /* אנימציות כניסה */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeIn 0.8s ease forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* פס תחתון של שבת */
+    .shabbat-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #8a7dff, #f6c870, #58d6ff);
+      transition: opacity 0.6s ease;
+      opacity: 0;
+    }
+    body.shabbat-active .shabbat-bar {
+      opacity: 1;
+    }
+
+    /* ticker */
+    .news-track {
+      display: inline-block;
+      white-space: nowrap;
+      animation: ticker 45s linear infinite;
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .dashboard-panel {
+      background: rgba(18, 20, 38, 0.9);
+      border: 1px solid rgba(120, 130, 205, 0.24);
+      border-radius: 2.25rem;
+      padding: 2.75rem 3.25rem;
+      box-shadow: 0 38px 70px rgba(8, 10, 24, 0.5);
+    }
+
+    /* מבנה לוח */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+      border-radius: 1.75rem;
+      overflow: hidden;
+    }
+
+    .dashboard-block {
+      padding: 2.2rem 2.6rem;
+      position: relative;
+    }
+
+    .dashboard-header {
+      grid-column: 1 / -1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-right: none;
+    }
+
+    .dashboard-header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 2.5rem;
+    }
+
+    .dashboard-header-stats {
+      margin-top: 2.2rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    .dashboard-stat-card {
+      background: rgba(24, 28, 54, 0.82);
+      border: 1px solid rgba(110, 120, 200, 0.24);
+      border-radius: 1.25rem;
+      padding: 1.2rem 1.35rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .dashboard-stat-card label,
+    .dashboard-stat-card p {
+      margin: 0;
+    }
+
+    .dashboard-block:nth-child(odd) {
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .dashboard-block:not(:nth-last-child(-n+2)) {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-block:nth-child(odd) {
+        border-right: none;
+      }
+
+      .dashboard-block {
+        padding: 2rem;
+      }
+
+      .dashboard-block:not(:last-child) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .dashboard-block:last-child {
+        border-bottom: none;
+      }
+
+      .dashboard-header-stats {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+
+      .dashboard-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+    }
+
+    .glass {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 1.55rem;
+      box-shadow: var(--panel-shadow);
+      backdrop-filter: blur(28px);
+    }
+
+    .clock-display {
+      font-size: clamp(3.75rem, 4.2vw, 5.2rem);
+      letter-spacing: 0.18em;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .progress-frame {
+      width: 100%;
+      height: 0.55rem;
+      background: rgba(91, 97, 146, 0.2);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      position: absolute;
+      inset: 0;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      transition: width 0.6s ease;
+    }
+
+    .select-control {
+      width: 100%;
+      background: linear-gradient(180deg, rgba(38, 40, 62, 0.95), rgba(25, 28, 49, 0.9));
+      border: 1px solid rgba(132, 139, 196, 0.45);
+      border-radius: 1rem;
+      padding: 0.75rem 1rem;
+      color: rgba(232, 236, 255, 0.95);
+      font-size: 1.05rem;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .select-control:focus {
+      outline: none;
+      border-color: rgba(138, 125, 255, 0.65);
+      box-shadow: 0 0 0 4px rgba(138, 125, 255, 0.18);
+    }
+
+    .select-control option {
+      color: #0f172a;
+      background: #f8fafc;
+    }
+
+    body.day-mode .select-control {
+      background: rgba(244, 247, 255, 0.95);
+      color: #0f172a;
+      border-color: rgba(148, 163, 184, 0.45);
+    }
+
+    body.day-mode .select-control:focus {
+      border-color: rgba(79, 70, 229, 0.55);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+    }
+
+    .heading-glow {
+      display: inline-flex;
+      gap: 0.8rem;
+      align-items: center;
+      font-weight: 600;
+      position: relative;
+      color: var(--text-primary);
+    }
+
+    .heading-glow::after {
+      content: "";
+      display: block;
+      height: 3px;
+      flex: 1;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(138, 125, 255, 0.7), rgba(246, 200, 112, 0.6), rgba(88, 214, 255, 0.65));
+      opacity: 0.75;
+    }
+
+    body.day-mode .heading-glow::after {
+      background: linear-gradient(90deg, rgba(79, 70, 229, 0.6), rgba(249, 115, 22, 0.6), rgba(14, 165, 233, 0.6));
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .news-meta span,
+    .news-summary,
+    .news-list-title,
+    .news-source {
+      color: var(--text-primary);
+    }
+
+    .active-city-label {
+      color: var(--accent-tertiary);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+
+    .news-highlight {
+      min-height: 8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      position: relative;
+      padding: 1.5rem;
+      border-radius: 1.25rem;
+      background: rgba(25, 27, 45, 0.9);
+      border: 1px solid rgba(120, 130, 205, 0.28);
+      box-shadow: 0 16px 32px rgba(6, 9, 22, 0.32);
+    }
+
+    .news-highlight::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border-radius: inherit;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(138, 125, 255, 0.08), rgba(246, 200, 112, 0.06), rgba(88, 214, 255, 0.08));
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .news-highlight:hover::after {
+      opacity: 1;
+    }
+
+    .news-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .news-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.5rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(88, 214, 255, 0.18);
+      color: rgba(255, 255, 255, 0.78);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .news-summary {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .news-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .news-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .news-list-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 0.85rem 1.1rem;
+      border-radius: 1rem;
+      background: rgba(20, 23, 42, 0.9);
+      border: 1px solid rgba(100, 110, 190, 0.22);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .news-list-item:hover {
+      border-color: rgba(138, 125, 255, 0.45);
+      box-shadow: 0 14px 24px rgba(10, 12, 28, 0.38);
+    }
+
+    .news-rank {
+      width: 1.9rem;
+      height: 1.9rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(138, 125, 255, 0.22);
+      color: rgba(255, 255, 255, 0.88);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .news-list-title {
+      font-weight: 600;
+      font-size: 0.98rem;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .news-source {
+      font-size: 0.82rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(88, 214, 255, 0.18);
+      color: rgba(255, 255, 255, 0.78);
+      white-space: nowrap;
+    }
+
+    .news-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+
+    .news-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(138, 125, 255, 0.16);
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .news-badge::before {
+      content: "";
+      width: 0.35rem;
+      height: 0.35rem;
+      border-radius: 999px;
+      background: var(--accent-tertiary);
+      box-shadow: 0 0 8px rgba(88, 214, 255, 0.5);
+    }
+
+    .news-list .panel-soft {
+      padding: 0.9rem 1.1rem;
+      border-radius: 1rem;
+      background: rgba(24, 28, 54, 0.78);
+      border: 1px solid rgba(110, 120, 200, 0.18);
+      text-align: center;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <main class="flex-1 px-16 py-10">
+    <div class="max-w-7xl mx-auto">
+      <section class="dashboard-panel glass fade-in">
+        <div class="dashboard-grid">
+          <!-- Header -->
+          <div class="dashboard-block dashboard-header">
+            <div class="dashboard-header-top">
+              <div>
+                <div class="badge flex items-center gap-2 mb-2">
+                  <span class="w-2 h-2 rounded-full bg-aurum animate-pulse"></span> שבת חיה · LIVE
+                </div>
+                <h1 class="text-5xl font-bold heading-glow">שבת שלום TV</h1>
+                <p class="text-lg text-white/95 mt-2">חוויית שבת חיה למסכי הבית והקהילה</p>
+              </div>
+              <button id="fullscreenButton" class="glass px-4 py-2 rounded-full">מסך מלא</button>
+            </div>
+            <div class="dashboard-header-stats">
+              <div class="dashboard-stat-card text-right">
+                <p class="text-sm text-white/88">תאריך לועזי</p>
+                <p id="gregorianDate" class="text-xl font-medium mt-1"></p>
+              </div>
+              <div class="dashboard-stat-card text-right">
+                <p class="text-sm text-white/88">תאריך עברי</p>
+                <p id="hebrewDate" class="text-xl font-medium mt-1"></p>
+              </div>
+              <div class="dashboard-stat-card text-right">
+                <label class="text-sm text-white/88 block mb-2">בחרו עיר</label>
+                <select id="citySelect" class="select-control"></select>
+              </div>
+            </div>
+            <p class="mt-4 text-white/92 text-sm">עיר פעילה: <span id="activeCityLabel" class="active-city-label">אליכין</span></p>
+          </div>
+
+          <!-- שעון -->
+          <div class="dashboard-block text-center">
+            <h2 class="text-4xl font-semibold mb-4 heading-glow">שעון חי</h2>
+            <div id="clockDisplay" class="clock-display tabular-nums"></div>
+            <div id="nextEvent" class="text-2xl text-white/95 mt-3"></div>
+          </div>
+
+          <!-- מזג אוויר -->
+          <div class="dashboard-block text-right">
+            <h2 class="text-4xl font-semibold mb-2 heading-glow">מזג אוויר</h2>
+            <p id="weatherLocation" class="text-white/92 text-lg mb-4">מתעדכן לפי העיר</p>
+            <div class="flex justify-between items-center mb-4">
+              <p id="currentWeatherSummary" class="text-2xl text-white/96"></p>
+              <p id="currentWeatherTemp" class="text-5xl font-bold"></p>
+            </div>
+            <ul id="weatherForecastList" class="grid grid-cols-3 gap-6 text-white/95"></ul>
+          </div>
+
+          <!-- זמני שבת -->
+          <div class="dashboard-block text-right">
+            <h2 class="text-4xl font-semibold mb-3 heading-glow">זמני שבת</h2>
+            <p id="parasha" class="text-xl text-white/92 mb-3"></p>
+            <p class="text-lg"><strong>כניסת שבת:</strong> <span id="candleLighting">—</span></p>
+            <p class="text-lg"><strong>צאת שבת:</strong> <span id="havdalah">—</span></p>
+            <p id="shabbatStatus" class="text-xl mt-4"></p>
+            <div class="progress-frame mt-4">
+              <span id="timeProgressFill" class="progress-fill"></span>
+            </div>
+          </div>
+
+          <!-- חדשות -->
+          <div class="dashboard-block text-right">
+            <h2 class="text-4xl font-semibold mb-3 heading-glow">חדשות</h2>
+            <div class="news-toolbar">
+              <span class="news-badge">עדכוני מערכת</span>
+              <button id="refreshNewsButton" class="glass px-4 py-2 rounded-full text-sm">רענון חדשות</button>
+            </div>
+            <div class="news-grid">
+              <div class="panel-soft news-highlight" id="newsHighlightCard">
+                <div class="news-meta">
+                  <span id="newsSource">מערכת</span>
+                  <span id="newsIndexIndicator" class="news-index"></span>
+                </div>
+                <h3 id="newsHeadline">אין כותרות זמינות כרגע</h3>
+                <p id="newsSummary" class="news-summary">ניסיון נוסף יתבצע בעוד מספר רגעים.</p>
+              </div>
+              <ul id="newsList" class="news-list"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="glass mx-10 mb-8 rounded-3xl px-12 py-6 flex justify-between items-center fade-in">
+    <div>
+      <p class="text-aurum text-xl font-semibold heading-glow">שבת שלום ומבורך</p>
+      <p class="text-white/92">מסך חי · מתעדכן בזמן אמת</p>
+    </div>
+    <div class="flex gap-3">
+      <span class="px-3 py-1 rounded-full bg-white/10 text-sm">Auto Refresh</span>
+      <span class="px-3 py-1 rounded-full bg-white/10 text-sm">Kiosk Ready</span>
+    </div>
+  </footer>
+
+  <!-- פס שבת -->
+  <div class="shabbat-bar"></div>
+
+  <script>
+    (() => {
+      const CityCatalog = {
+        options: [
+          { value: "jerusalem", label: "ירושלים" },
+          { value: "tel-aviv", label: "תל אביב" },
+          { value: "haifa", label: "חיפה" },
+          { value: "beer-sheva", label: "באר שבע" },
+          { value: "netanya", label: "נתניה" },
+          { value: "ashdod", label: "אשדוד" },
+          { value: "ashkelון", label: "אשקלון" },
+          { value: "tiberias", label: "טבריה" },
+          { value: "eilat", label: "אילת" },
+          { value: "eliakhin", label: "אליכין" },
+          { value: "mevasseret-zion", label: "מבשרת ציון" },
+        ],
+        coordinates: {
+          "jerusalem": { latitude: 31.778, longitude: 35.235 },
+          "tel-aviv": { latitude: 32.0853, longitude: 34.7818 },
+          "haifa": { latitude: 32.794, longitude: 34.989 },
+          "beer-sheva": { latitude: 31.251, longitude: 34.791 },
+          "netanya": { latitude: 32.321, longitude: 34.853 },
+          "ashdod": { latitude: 31.801, longitude: 34.643 },
+          "ashkelון": { latitude: 31.669, longitude: 34.571 },
+          "tiberias": { latitude: 32.7922, longitude: 35.5322 },
+          "eilat": { latitude: 29.5581, longitude: 34.9482 },
+          "eliakhin": { latitude: 32.412, longitude: 35.004 },
+          "mevasseret-zion": { latitude: 31.807, longitude: 35.146 },
+        },
+        default() {
+          return this.options.find((city) => city.value === "eliakhin")?.value ?? this.options[0]?.value ?? "jerusalem";
+        },
+        list() {
+          return this.options;
+        },
+        label(id) {
+          return this.options.find((city) => city.value === id)?.label ?? id;
+        },
+        coords(id) {
+          return this.coordinates[id] ?? null;
+        },
+      };
+
+      const AppConfig = {
+        defaultCity: CityCatalog.default(),
+        refresh: {
+          clock: 1000,
+          shabbat: 10 * 60 * 1000,
+          weather: 30 * 60 * 1000,
+          news: 15 * 60 * 1000,
+          calendar: 60 * 60 * 1000,
+          newsRotation: 15000,
+        },
+        rssFeeds: [
+          { name: "Ynet", url: `https://api.allorigins.win/raw?url=${encodeURIComponent("https://www.ynet.co.il/Integration/StoryRss1854.xml")}` },
+          { name: "N12", url: `https://api.allorigins.win/raw?url=${encodeURIComponent("https://rss.n12.co.il/?s=network")}` },
+          { name: "Rotter", url: `https://api.allorigins.win/raw?url=${encodeURIComponent("https://rotter.net/rss/all_ticker.xml")}` },
+        ],
+      };
+
+      const Formatters = {
+        gregorian: new Intl.DateTimeFormat("he-IL", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+        weekday: new Intl.DateTimeFormat("he-IL", { weekday: "long" }),
+        time: new Intl.DateTimeFormat("he-IL", { hour: "2-digit", minute: "2-digit" }),
+        timeWithSeconds: new Intl.DateTimeFormat("he-IL", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+      };
+
+      const DOM = {
+        clockDisplay: document.getElementById("clockDisplay"),
+        nextEvent: document.getElementById("nextEvent"),
+        gregorianDate: document.getElementById("gregorianDate"),
+        hebrewDate: document.getElementById("hebrewDate"),
+        citySelect: document.getElementById("citySelect"),
+        activeCityLabel: document.getElementById("activeCityLabel"),
+        candleLighting: document.getElementById("candleLighting"),
+        havdalah: document.getElementById("havdalah"),
+        shabbatStatus: document.getElementById("shabbatStatus"),
+        parasha: document.getElementById("parasha"),
+        timeProgressFill: document.getElementById("timeProgressFill"),
+        weatherLocation: document.getElementById("weatherLocation"),
+        currentWeatherTemp: document.getElementById("currentWeatherTemp"),
+        currentWeatherSummary: document.getElementById("currentWeatherSummary"),
+        weatherForecastList: document.getElementById("weatherForecastList"),
+        newsHighlightCard: document.getElementById("newsHighlightCard"),
+        newsHeadline: document.getElementById("newsHeadline"),
+        newsSummary: document.getElementById("newsSummary"),
+        newsSource: document.getElementById("newsSource"),
+        newsIndexIndicator: document.getElementById("newsIndexIndicator"),
+        newsList: document.getElementById("newsList"),
+        refreshNewsButton: document.getElementById("refreshNewsButton"),
+        fullscreenButton: document.getElementById("fullscreenButton"),
+      };
+
+      const AppState = {
+        cityId: AppConfig.defaultCity,
+        sunTimes: { sunrise: null, sunset: null },
+        shabbat: { candleLighting: null, havdalah: null, parasha: "" },
+        calendar: { gregorian: "", hebrew: "" },
+        weather: { current: null, forecast: [] },
+        news: { items: [], index: 0 },
+      };
+
+      const Cache = {
+        hebrewDayStamp: "",
+        shabbatSignature: "",
+        weatherSignature: "",
+        newsSignature: "",
+      };
+
+      const WeatherDictionary = {
+        map: {
+          0: "☀️ שמיים בהירים",
+          1: "🌤️ מעונן קל",
+          2: "⛅ מעונן חלקית",
+          3: "☁️ מעונן",
+          45: "🌫️ ערפל",
+          48: "🌫️ ערפל קפוא",
+          51: "🌦️ טפטוף קל",
+          53: "🌦️ טפטוף",
+          55: "🌧️ טפטוף חזק",
+          61: "🌧️ גשם קל",
+          63: "🌧️ גשם בינוני",
+          65: "🌧️ גשם חזק",
+          71: "🌨️ שלג קל",
+          73: "🌨️ שלג",
+          75: "❄️ שלג כבד",
+          80: "🌦️ ממטרים",
+          81: "🌧️ ממטרים בינוניים",
+          82: "⛈️ ממטרים חזקים",
+          95: "⛈️ סופות רעמים",
+          96: "⛈️ סופות רעמים עם ברד",
+          99: "⛈️ סופות רעמים עם ברד כבד",
+        },
+        describe(code) {
+          return this.map[code] ?? "עדכון מזג אוויר";
+        },
+      };
+
+      const Utils = {
+        dayStamp(date) {
+          return date.toISOString().slice(0, 10);
+        },
+        fetchWithTimeout(url, { timeout = 12000 } = {}) {
+          const controller = new AbortController();
+          const id = setTimeout(() => controller.abort(), timeout);
+          return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(id));
+        },
+        sanitize(text) {
+          if (!text) return "";
+          const tmp = document.createElement("div");
+          tmp.innerHTML = text;
+          return tmp.textContent?.trim() ?? "";
+        },
+        formatTime(date) {
+          return Formatters.time.format(date);
+        },
+        formatTimeFull(date) {
+          return Formatters.timeWithSeconds.format(date).replace(/\./g, ":");
+        },
+        computeProgress(now, start, end) {
+          const total = end - start;
+          if (total <= 0) return 0;
+          return Math.min(100, Math.max(0, ((now - start) / total) * 100));
+        },
+        temperatureColor(value) {
+          if (value > 30) return "#ff7676";
+          if (value > 20) return "#f6c870";
+          if (value > 10) return "#58d6ff";
+          return "#a0b8ff";
+        },
+      };
+
+      const Http = {
+        async json(url, options) {
+          const response = await Utils.fetchWithTimeout(url, options);
+          if (!response.ok) {
+            throw new Error(`Request failed: ${response.status}`);
+          }
+          return response.json();
+        },
+        async text(url, options) {
+          const response = await Utils.fetchWithTimeout(url, options);
+          if (!response.ok) {
+            throw new Error(`Request failed: ${response.status}`);
+          }
+          return response.text();
+        },
+      };
+
+      const UI = {
+        populateCities() {
+          if (!DOM.citySelect) return;
+          DOM.citySelect.innerHTML = "";
+          CityCatalog.list().forEach((city) => {
+            const option = document.createElement("option");
+            option.value = city.value;
+            option.textContent = city.label;
+            DOM.citySelect.appendChild(option);
+          });
+          DOM.citySelect.value = AppState.cityId;
+          this.updateActiveCityLabel();
+        },
+        updateActiveCityLabel() {
+          if (DOM.activeCityLabel) {
+            DOM.activeCityLabel.textContent = CityCatalog.label(AppState.cityId);
+          }
+        },
+        toggleCityLoading(isLoading) {
+          if (!DOM.citySelect) return;
+          DOM.citySelect.disabled = isLoading;
+          DOM.citySelect.classList.toggle("opacity-60", isLoading);
+        },
+        renderCalendar({ gregorian, hebrew }) {
+          if (DOM.gregorianDate) DOM.gregorianDate.textContent = gregorian;
+          if (DOM.hebrewDate) DOM.hebrewDate.textContent = hebrew;
+        },
+        renderShabbatTimes() {
+          const { candleLighting, havdalah, parasha } = AppState.shabbat;
+          if (DOM.candleLighting) DOM.candleLighting.textContent = candleLighting ? Utils.formatTime(candleLighting) : "—";
+          if (DOM.havdalah) DOM.havdalah.textContent = havdalah ? Utils.formatTime(havdalah) : "—";
+          if (DOM.parasha) DOM.parasha.textContent = parasha ? `פרשת ${parasha}` : "";
+        },
+        setProgress(value) {
+          if (DOM.timeProgressFill) DOM.timeProgressFill.style.width = `${value}%`;
+        },
+        renderWeather() {
+          const { current, forecast } = AppState.weather;
+          if (!current) return;
+
+          if (DOM.weatherLocation) DOM.weatherLocation.textContent = `תחזית עבור ${CityCatalog.label(AppState.cityId)}`;
+          if (DOM.currentWeatherTemp) {
+            DOM.currentWeatherTemp.textContent = `${Math.round(current.temperature)}°`;
+            DOM.currentWeatherTemp.style.color = Utils.temperatureColor(current.temperature);
+          }
+          if (DOM.currentWeatherSummary) DOM.currentWeatherSummary.textContent = current.description;
+
+          if (DOM.weatherForecastList) {
+            DOM.weatherForecastList.innerHTML = "";
+            forecast.forEach((day) => {
+              const li = document.createElement("li");
+              li.className = "p-3 rounded-xl bg-white/5 text-center";
+              li.innerHTML = `
+                <div>${Formatters.weekday.format(day.date)}</div>
+                <div class="text-lg">${WeatherDictionary.describe(day.code)}</div>
+                <div>${Math.round(day.max)}° / ${Math.round(day.min)}°</div>
+              `;
+              DOM.weatherForecastList.appendChild(li);
+            });
+          }
+        },
+        renderWeatherError() {
+          if (DOM.weatherLocation) DOM.weatherLocation.textContent = "שגיאה בטעינת תחזית";
+          if (DOM.currentWeatherTemp) {
+            DOM.currentWeatherTemp.textContent = "—";
+            DOM.currentWeatherTemp.style.color = "";
+          }
+          if (DOM.currentWeatherSummary) DOM.currentWeatherSummary.textContent = "";
+          if (DOM.weatherForecastList) DOM.weatherForecastList.innerHTML = "";
+        },
+        renderNewsHighlight({ animate } = { animate: true }) {
+          if (!DOM.newsHighlightCard) return;
+          const items = AppState.news.items;
+          if (!items.length) {
+            this.renderNewsEmpty();
+            return;
+          }
+
+          const index = AppState.news.index % items.length;
+          const current = items[index];
+
+          const apply = () => {
+            if (DOM.newsSource) DOM.newsSource.textContent = current.source ?? "—";
+            if (DOM.newsHeadline) DOM.newsHeadline.textContent = current.title ?? "";
+            if (DOM.newsSummary) DOM.newsSummary.textContent = current.summary ?? "";
+            if (DOM.newsIndexIndicator) DOM.newsIndexIndicator.textContent = `${index + 1}/${items.length}`;
+            this.renderNewsList(index);
+          };
+
+          if (animate) {
+            DOM.newsHighlightCard.classList.add("is-fading");
+            setTimeout(() => {
+              apply();
+              DOM.newsHighlightCard.classList.remove("is-fading");
+            }, 220);
+          } else {
+            apply();
+            DOM.newsHighlightCard.classList.remove("is-fading");
+          }
+        },
+        renderNewsList(activeIndex) {
+          if (!DOM.newsList) return;
+          DOM.newsList.innerHTML = "";
+
+          const items = AppState.news.items;
+          const upcoming = [...items.slice(activeIndex + 1), ...items.slice(0, activeIndex)].slice(0, 4);
+
+          if (!upcoming.length) {
+            const li = document.createElement("li");
+            li.className = "panel-soft";
+            li.textContent = "אין כותרות נוספות כעת.";
+            DOM.newsList.appendChild(li);
+            return;
+          }
+
+          upcoming.forEach((item, idx) => {
+            const li = document.createElement("li");
+            li.className = "news-list-item";
+
+            const rank = document.createElement("span");
+            rank.className = "news-rank";
+            rank.textContent = `${idx + 1}`;
+
+            const title = document.createElement("span");
+            title.className = "news-list-title";
+            title.textContent = item.title;
+
+            const source = document.createElement("span");
+            source.className = "news-source";
+            source.textContent = item.source ?? "—";
+
+            li.append(rank, title, source);
+            DOM.newsList.appendChild(li);
+          });
+        },
+        renderNewsEmpty() {
+          if (DOM.newsSource) DOM.newsSource.textContent = "מערכת";
+          if (DOM.newsHeadline) DOM.newsHeadline.textContent = "אין כותרות זמינות כרגע";
+          if (DOM.newsSummary) DOM.newsSummary.textContent = "ניסיון נוסף יתבצע בעוד מספר רגעים.";
+          if (DOM.newsIndexIndicator) DOM.newsIndexIndicator.textContent = "";
+          if (DOM.newsList) DOM.newsList.innerHTML = "";
+        },
+      };
+
+      const Theme = {
+        apply() {
+          document.body.classList.remove("day-mode");
+        },
+      };
+
+      const ShabbatStatus = {
+        update() {
+          const { candleLighting, havdalah } = AppState.shabbat;
+          const now = new Date();
+
+          if (!candleLighting || !havdalah) {
+            if (DOM.shabbatStatus) DOM.shabbatStatus.textContent = "ממתין לזמני שבת";
+            if (DOM.nextEvent) DOM.nextEvent.textContent = "";
+            UI.setProgress(0);
+            document.body.classList.remove("shabbat-active");
+            return;
+          }
+
+          let label = "";
+          let next = "";
+          let progress = 0;
+
+          if (now >= candleLighting && now <= havdalah) {
+            const hoursLeft = Math.max(0, Math.round((havdalah - now) / 36e5));
+            label = "שבת בעיצומה 🌙";
+            next = `צאת שבת ב-${Utils.formatTime(havdalah)}${hoursLeft ? ` (כ-${hoursLeft} שעות)` : ""}`;
+            progress = Utils.computeProgress(now, candleLighting, havdalah);
+            document.body.classList.add("shabbat-active");
+          } else if (now < candleLighting) {
+            const startOfDay = new Date(now);
+            startOfDay.setHours(0, 0, 0, 0);
+            label = "הכנות לשבת 🕯️";
+            next = `כניסת שבת ב-${Utils.formatTime(candleLighting)}`;
+            progress = Utils.computeProgress(now, startOfDay, candleLighting);
+            document.body.classList.remove("shabbat-active");
+          } else {
+            label = "שבוע טוב 🌅";
+            next = "השבת הסתיימה – שבוע נפלא!";
+            progress = 100;
+            document.body.classList.remove("shabbat-active");
+          }
+
+          if (DOM.shabbatStatus) DOM.shabbatStatus.textContent = label;
+          if (DOM.nextEvent) DOM.nextEvent.textContent = next;
+          UI.setProgress(progress);
+        },
+      };
+
+      const CalendarService = {
+        async load(force = false) {
+          const now = new Date();
+          const stamp = Utils.dayStamp(now);
+          if (!force && Cache.hebrewDayStamp === stamp) {
+            UI.renderCalendar(AppState.calendar);
+            return;
+          }
+
+          const gregorian = Formatters.gregorian.format(now);
+          try {
+            const url = `https://www.hebcal.com/converter/?cfg=json&g2h=1&strict=1&date=${stamp}`;
+            const data = await Http.json(url);
+            AppState.calendar = { gregorian, hebrew: data.hebrew ?? "—" };
+            Cache.hebrewDayStamp = stamp;
+            UI.renderCalendar(AppState.calendar);
+          } catch (error) {
+            console.error("Hebrew date error", error);
+            AppState.calendar = { gregorian, hebrew: "שגיאה בחישוב תאריך" };
+            UI.renderCalendar(AppState.calendar);
+          }
+        },
+      };
+
+      const ShabbatService = {
+        async load(force = false) {
+          const coords = CityCatalog.coords(AppState.cityId);
+          const base = coords
+            ? `latitude=${coords.latitude}&longitude=${coords.longitude}&tzid=Asia/Jerusalem`
+            : `city=${encodeURIComponent(AppState.cityId)}`;
+          const url = `https://www.hebcal.com/shabbat/?cfg=json&${base}&m=50&leyning=on`;
+
+          try {
+            const data = await Http.json(url);
+            const signature = JSON.stringify({
+              city: AppState.cityId,
+              items: (data.items ?? []).slice(0, 6).map((item) => [item.category, item.date]),
+            });
+
+            if (!force && signature === Cache.shabbatSignature) {
+              UI.renderShabbatTimes();
+              ShabbatStatus.update();
+              Theme.apply();
+              return;
+            }
+
+            Cache.shabbatSignature = signature;
+            const candle = data.items?.find((item) => item.category === "candles") ?? null;
+            const havdalah = data.items?.find((item) => item.category === "havdalah") ?? null;
+            const parasha = data.items?.find((item) => item.category === "parashat")?.hebrew ?? "";
+
+            AppState.shabbat = {
+              candleLighting: candle ? new Date(candle.date) : null,
+              havdalah: havdalah ? new Date(havdalah.date) : null,
+              parasha,
+            };
+
+            if (data.location?.sunrise) AppState.sunTimes.sunrise = new Date(data.location.sunrise);
+            if (data.location?.sunset) AppState.sunTimes.sunset = new Date(data.location.sunset);
+
+            UI.renderShabbatTimes();
+            ShabbatStatus.update();
+            Theme.apply();
+          } catch (error) {
+            console.error("Shabbat API error", error);
+            if (DOM.shabbatStatus) DOM.shabbatStatus.textContent = "תקלה בזמני שבת";
+            if (DOM.nextEvent) DOM.nextEvent.textContent = "";
+            UI.setProgress(0);
+          }
+        },
+      };
+
+      const WeatherService = {
+        async load(force = false) {
+          const coords = CityCatalog.coords(AppState.cityId);
+          if (!coords) {
+            UI.renderWeatherError();
+            return;
+          }
+
+          const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset&timezone=auto&forecast_days=3`;
+
+          try {
+            const data = await Http.json(url);
+            const signature = JSON.stringify({
+              city: AppState.cityId,
+              current: data.current_weather?.time,
+              daily: data.daily?.time ?? [],
+            });
+
+            if (!force && signature === Cache.weatherSignature) {
+              UI.renderWeather();
+              return;
+            }
+
+            Cache.weatherSignature = signature;
+            const current = data.current_weather ?? null;
+            const daily = data.daily ?? {};
+
+            AppState.weather.current = current
+              ? {
+                  temperature: current.temperature,
+                  description: WeatherDictionary.describe(current.weathercode),
+                }
+              : null;
+
+            AppState.weather.forecast = (daily.time ?? []).map((date, index) => ({
+              date: new Date(date),
+              max: daily.temperature_2m_max?.[index],
+              min: daily.temperature_2m_min?.[index],
+              precipitation: daily.precipitation_probability_max?.[index],
+              code: daily.weathercode?.[index],
+            }));
+
+            if (daily.sunrise?.[0]) AppState.sunTimes.sunrise = new Date(daily.sunrise[0]);
+            if (daily.sunset?.[0]) AppState.sunTimes.sunset = new Date(daily.sunset[0]);
+
+            UI.renderWeather();
+            Theme.apply();
+          } catch (error) {
+            console.error("Weather API error", error);
+            UI.renderWeatherError();
+          }
+        },
+      };
+
+      const NewsService = {
+        async load(force = false) {
+          if (!force && Cache.newsSignature && AppState.news.items.length) {
+            UI.renderNewsHighlight({ animate: false });
+            return;
+          }
+
+          const all = [];
+          await Promise.all(
+            AppConfig.rssFeeds.map(async (feed) => {
+              try {
+                const xmlText = await Http.text(feed.url, { timeout: 10000 });
+                const xmlDoc = new DOMParser().parseFromString(xmlText, "application/xml");
+                const items = Array.from(xmlDoc.querySelectorAll("item")).slice(0, 12);
+                items.forEach((node) => {
+                  const title = Utils.sanitize(node.querySelector("title")?.textContent ?? "");
+                  if (!title) return;
+                  const summary = Utils.sanitize(node.querySelector("description")?.textContent ?? "");
+                  all.push({ source: feed.name, title, summary });
+                });
+              } catch (error) {
+                console.error("RSS error", feed.name, error);
+              }
+            })
+          );
+
+          const signature = JSON.stringify(all.slice(0, 6));
+          if (!force && signature === Cache.newsSignature) {
+            return;
+          }
+
+          Cache.newsSignature = signature;
+          AppState.news = { items: all, index: 0 };
+
+          if (!all.length) {
+            UI.renderNewsEmpty();
+            NewsTicker.stop();
+            return;
+          }
+
+          UI.renderNewsHighlight({ animate: false });
+          NewsTicker.restart();
+        },
+      };
+
+      const NewsTicker = {
+        timer: null,
+        start() {
+          this.stop();
+          if (AppState.news.items.length > 1) {
+            this.timer = setInterval(() => this.next(), AppConfig.refresh.newsRotation);
+          }
+        },
+        stop() {
+          if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+          }
+        },
+        restart() {
+          this.stop();
+          this.start();
+        },
+        next() {
+          if (!AppState.news.items.length) return;
+          AppState.news.index = (AppState.news.index + 1) % AppState.news.items.length;
+          UI.renderNewsHighlight({ animate: true });
+        },
+      };
+
+      const Clock = {
+        tick() {
+          const now = new Date();
+          if (DOM.clockDisplay) {
+            DOM.clockDisplay.textContent = Utils.formatTimeFull(now);
+          }
+          Theme.apply();
+          ShabbatStatus.update();
+        },
+      };
+
+      const TaskRunner = {
+        timers: new Map(),
+        register(key, fn, interval) {
+          this.cancel(key);
+          this.timers.set(key, setInterval(fn, interval));
+        },
+        cancel(key) {
+          if (this.timers.has(key)) {
+            clearInterval(this.timers.get(key));
+            this.timers.delete(key);
+          }
+        },
+        stopAll() {
+          this.timers.forEach((timer) => clearInterval(timer));
+          this.timers.clear();
+          NewsTicker.stop();
+        },
+        start() {
+          this.register("clock", () => Clock.tick(), AppConfig.refresh.clock);
+          this.register("shabbat", () => ShabbatService.load(false), AppConfig.refresh.shabbat);
+          this.register("weather", () => WeatherService.load(false), AppConfig.refresh.weather);
+          this.register("news", () => NewsService.load(true), AppConfig.refresh.news);
+          this.register("calendar", () => CalendarService.load(false), AppConfig.refresh.calendar);
+        },
+      };
+
+      const App = {
+        async boot() {
+          UI.populateCities();
+          UI.updateActiveCityLabel();
+          this.bindEvents();
+
+          await this.initialFetch();
+          Clock.tick();
+          TaskRunner.start();
+        },
+        async initialFetch() {
+          UI.toggleCityLoading(true);
+          try {
+            await Promise.all([
+              CalendarService.load(true),
+              ShabbatService.load(true),
+              WeatherService.load(true),
+              NewsService.load(true),
+            ]);
+          } finally {
+            UI.toggleCityLoading(false);
+          }
+        },
+        async changeCity(cityId) {
+          if (cityId === AppState.cityId) return;
+          AppState.cityId = cityId;
+          if (DOM.citySelect) DOM.citySelect.value = cityId;
+          UI.updateActiveCityLabel();
+          Cache.shabbatSignature = "";
+          Cache.weatherSignature = "";
+          await this.refreshCity(true);
+        },
+        async refreshCity(force = false) {
+          UI.toggleCityLoading(true);
+          try {
+            await Promise.all([ShabbatService.load(force), WeatherService.load(force)]);
+          } finally {
+            UI.toggleCityLoading(false);
+          }
+        },
+        bindEvents() {
+          if (DOM.citySelect) {
+            DOM.citySelect.addEventListener("change", (event) => this.changeCity(event.target.value));
+          }
+
+          if (DOM.refreshNewsButton) {
+            DOM.refreshNewsButton.addEventListener("click", () => {
+              Cache.newsSignature = "";
+              NewsService.load(true);
+            });
+          }
+
+          if (DOM.fullscreenButton) {
+            DOM.fullscreenButton.addEventListener("click", () => this.requestFullscreen());
+          }
+
+          document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+              TaskRunner.stopAll();
+            } else {
+              Clock.tick();
+              TaskRunner.start();
+              this.refreshCity(false);
+              NewsService.load(true);
+              CalendarService.load(false);
+            }
+          });
+
+          window.addEventListener("online", () => {
+            Cache.newsSignature = "";
+            Cache.weatherSignature = "";
+            Cache.shabbatSignature = "";
+            this.refreshCity(true);
+            NewsService.load(true);
+          });
+        },
+        requestFullscreen() {
+          const root = document.documentElement;
+          if (root.requestFullscreen) {
+            root.requestFullscreen().catch(() => {});
+          }
+        },
+      };
+
+      document.addEventListener("DOMContentLoaded", () => App.boot());
+    })();
+  </script>
+</body>
+</html>

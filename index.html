@@ -8,298 +8,63 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>שבת שלום TV</title>
 
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { display: ["'Rubik'", "system-ui", "sans-serif"] },
+          colors: { midnight: "#101624", aurum: "#F2C94C" }
+        },
+      },
+    };
+  </script>
+
   <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet"/>
 
   <style>
-    *, *::before, *::after {
+    * {
       box-sizing: border-box;
     }
 
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
     :root {
-      color-scheme: dark;
-      --bg-gradient: radial-gradient(135% 180% at 72% 12%, #453372 0%, #1a1f31 45%, #080911 100%);
-      --bg-gradient-alt: radial-gradient(140% 200% at 32% -10%, #182033 0%, #0c101e 52%, #06070f 100%);
-      --aurora-1: rgba(104, 119, 255, 0.28);
-      --aurora-2: rgba(88, 214, 255, 0.22);
-      --aurora-3: rgba(242, 201, 124, 0.18);
-      --panel: rgba(22, 24, 42, 0.96);
-      --panel-border: rgba(129, 136, 196, 0.28);
-      --panel-shadow: 0 32px 70px rgba(6, 9, 21, 0.6);
-      --text-primary: #ffffff;
-      --text-secondary: rgba(255, 255, 255, 0.82);
-      --accent-primary: #8a7dff;
-      --accent-secondary: #f6c870;
-      --accent-tertiary: #58d6ff;
-      --glow-primary: rgba(138, 125, 255, 0.55);
-      --glow-secondary: rgba(246, 200, 112, 0.45);
-      --glow-tertiary: rgba(88, 214, 255, 0.38);
-      --divider: rgba(124, 132, 196, 0.22);
+      color-scheme: light;
+      --bg-gradient: radial-gradient(140% 200% at 50% 0%, #f9fafc 0%, #edf0ff 35%, #dce2ff 70%, #cfd8ff 100%);
+      --panel: rgba(255, 255, 255, 0.95);
+      --panel-border: rgba(148, 163, 184, 0.28);
+      --panel-shadow: 0 32px 70px rgba(15, 23, 42, 0.12);
+      --text-primary: #0f172a;
+      --text-secondary: rgba(15, 23, 42, 0.7);
+      --accent-primary: #6366f1;
+      --accent-secondary: #f97316;
+      --accent-tertiary: #0ea5e9;
+      --divider: rgba(148, 163, 184, 0.24);
     }
 
     body {
-      margin: 0;
       font-family: "Rubik", system-ui, sans-serif;
       background: var(--bg-gradient);
       color: var(--text-primary);
       transition: background 1s ease, color 1s ease;
-      overflow-x: hidden;
-      position: relative;
-      min-height: 100vh;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: -35% -25% auto;
-      height: 120vh;
-      background: radial-gradient(circle at 20% 20%, var(--aurora-1), transparent 55%),
-                  radial-gradient(circle at 80% 30%, var(--aurora-2), transparent 55%),
-                  radial-gradient(circle at 50% 90%, var(--aurora-3), transparent 65%);
-      opacity: 0.9;
-      filter: blur(60px);
-      animation: auroraFlow 18s ease-in-out infinite alternate;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    body::after {
-      position: fixed;
-      inset: 0;
-      content: "";
-      background: radial-gradient(120% 160% at 50% 20%, rgba(255, 255, 255, 0.06), transparent 70%);
-      mix-blend-mode: screen;
-      opacity: 0.75;
-      pointer-events: none;
-      z-index: -2;
-    }
-
-    button {
-      font: inherit;
-      color: inherit;
-      background: linear-gradient(135deg, rgba(138, 125, 255, 0.22), rgba(88, 214, 255, 0.18));
-      border: 1px solid rgba(138, 125, 255, 0.45);
-      cursor: pointer;
-      border-radius: 999px;
-      padding: 0.65rem 1.6rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      font-size: 0.78rem;
-      transition: transform 0.35s ease, box-shadow 0.45s ease, border-color 0.35s ease;
-      box-shadow: 0 12px 24px rgba(15, 22, 48, 0.35);
-      backdrop-filter: blur(10px);
-    }
-
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.7;
-      box-shadow: none;
-    }
-
-    button:not(:disabled):hover,
-    button:not(:disabled):focus-visible {
-      transform: translateY(-2px);
-      border-color: rgba(246, 200, 112, 0.55);
-      box-shadow: 0 18px 42px rgba(138, 125, 255, 0.32);
-    }
-
-    button:not(:disabled):active {
-      transform: translateY(0);
-    }
-
-    select {
-      font: inherit;
-      background: linear-gradient(155deg, rgba(38, 40, 62, 0.94), rgba(25, 28, 49, 0.9));
-      border: 1px solid rgba(138, 125, 255, 0.45);
-      border-radius: 1rem;
-      padding: 0.85rem 1rem;
-      color: rgba(232, 236, 255, 0.95);
-      transition: border-color 0.25s ease, box-shadow 0.3s ease, transform 0.3s ease;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(12px);
-    }
-
-    select:focus-visible {
-      outline: none;
-      border-color: rgba(88, 214, 255, 0.65);
-      box-shadow: 0 0 0 4px rgba(88, 214, 255, 0.16);
-      transform: translateY(-1px);
-    }
-
-    main {
-      padding: clamp(2.5rem, 5vw, 5.5rem) clamp(2.5rem, 6vw, 6.5rem);
-      position: relative;
-      z-index: 1;
-    }
-
-    .ambient-lights {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
       overflow: hidden;
-      z-index: 0;
-      filter: blur(26px);
-      opacity: 0.85;
-    }
-
-    .ambient-lights span {
-      position: absolute;
-      width: clamp(220px, 16vw, 320px);
-      height: clamp(220px, 16vw, 320px);
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.45), transparent 65%);
-      opacity: 0.18;
-      animation: floatOrb 18s ease-in-out infinite;
-      mix-blend-mode: screen;
-    }
-
-    .ambient-lights span:nth-child(1) {
-      top: -8%;
-      left: 12%;
-      animation-delay: -4s;
-    }
-
-    .ambient-lights span:nth-child(2) {
-      bottom: 6%;
-      right: 8%;
-      animation-delay: -9s;
-    }
-
-    .ambient-lights span:nth-child(3) {
-      top: 45%;
-      left: 60%;
-      animation-delay: -13s;
-    }
-
-    /* Utility layout classes (Tailwind replacements) */
-    .min-h-screen { min-height: 100vh; }
-    .flex { display: flex; }
-    .flex-col { flex-direction: column; }
-    .flex-1 { flex: 1 1 0%; }
-    .items-center { align-items: center; }
-    .justify-between { justify-content: space-between; }
-    .text-center { text-align: center; }
-    .text-right { text-align: right; }
-    .mx-auto { margin-left: auto; margin-right: auto; }
-    .mx-10 { margin-left: 2.5rem; margin-right: 2.5rem; }
-    .block { display: block; }
-    .mb-2 { margin-bottom: 0.5rem; }
-    .mb-3 { margin-bottom: 0.75rem; }
-    .mb-4 { margin-bottom: 1rem; }
-    .mb-8 { margin-bottom: 2rem; }
-    .mt-1 { margin-top: 0.25rem; }
-    .mt-2 { margin-top: 0.5rem; }
-    .mt-3 { margin-top: 0.75rem; }
-    .mt-4 { margin-top: 1rem; }
-    .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
-    .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
-    .px-4 { padding-left: 1rem; padding-right: 1rem; }
-    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-    .px-12 { padding-left: 3rem; padding-right: 3rem; }
-    .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
-    .px-16 { padding-left: 4rem; padding-right: 4rem; }
-    .py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
-    .gap-2 { gap: 0.5rem; }
-    .gap-3 { gap: 0.75rem; }
-    .gap-6 { gap: 1.5rem; }
-    .grid { display: grid; }
-    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .max-w-7xl { max-width: min(1720px, 92vw); width: 100%; position: relative; z-index: 1; }
-    .w-2 { width: 0.5rem; }
-    .h-2 { height: 0.5rem; }
-    .p-3 { padding: 0.75rem; }
-    .rounded-full { border-radius: 9999px; }
-    .rounded-xl { border-radius: 0.75rem; }
-    .rounded-3xl { border-radius: 1.5rem; }
-    .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-    .text-lg { font-size: 1.125rem; line-height: 1.6rem; }
-    .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
-    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
-    .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
-    .text-5xl { font-size: 3rem; line-height: 1; }
-    .font-medium { font-weight: 500; }
-    .font-semibold { font-weight: 600; }
-    .font-bold { font-weight: 700; }
-    .tabular-nums { font-variant-numeric: tabular-nums; }
-    .text-white\/88 { color: rgba(255, 255, 255, 0.88); }
-    .text-white\/92 { color: rgba(255, 255, 255, 0.92); }
-    .text-white\/95 { color: rgba(255, 255, 255, 0.95); }
-    .text-white\/96 { color: rgba(255, 255, 255, 0.96); }
-    .text-aurum { color: var(--accent-secondary); }
-    .bg-aurum { background-color: var(--accent-secondary); }
-    .bg-white\/5 { background-color: rgba(255, 255, 255, 0.05); }
-    .bg-white\/10 { background-color: rgba(255, 255, 255, 0.1); }
-    .badge { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.72); }
-    .animate-pulse { animation: pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    @keyframes auroraFlow {
-      0% { transform: translate3d(-8%, -6%, 0) scale(1); opacity: 0.75; }
-      50% { transform: translate3d(6%, 4%, 0) scale(1.05); opacity: 0.9; }
-      100% { transform: translate3d(-4%, 6%, 0) scale(1.03); opacity: 0.8; }
-    }
-
-    @keyframes floatOrb {
-      0% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.2; }
-      50% { transform: translate3d(6%, -4%, 0) scale(1.08); opacity: 0.35; }
-      100% { transform: translate3d(-4%, 6%, 0) scale(0.96); opacity: 0.18; }
-    }
-
-    @keyframes panelReveal {
-      0% { opacity: 0; transform: translateY(32px) scale(0.95); filter: blur(6px); }
-      55% { opacity: 1; }
-      100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-    }
-
-    @keyframes beamSweep {
-      0% { transform: translate3d(-40%, -10%, 0) rotate(8deg); opacity: 0.35; }
-      50% { opacity: 0.55; }
-      100% { transform: translate3d(40%, 12%, 0) rotate(-6deg); opacity: 0.25; }
-    }
-
-    @keyframes shimmerSweep {
-      0% { transform: translateX(-120%); opacity: 0; }
-      10% { opacity: 0.6; }
-      40% { transform: translateX(160%); opacity: 0; }
-      100% { transform: translateX(180%); opacity: 0; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .animate-pulse { animation-duration: 0s; }
-      body::before,
-      .ambient-lights span,
-      .dashboard-panel::before,
-      .dashboard-block,
-      .news-highlight::before {
-        animation: none !important;
-      }
-      .dashboard-block {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    @media (max-width: 1024px) {
-      .px-16 { padding-left: 1.5rem; padding-right: 1.5rem; }
-      .py-10 { padding-top: 2rem; padding-bottom: 2rem; }
-      .mx-10 { margin-left: 1.5rem; margin-right: 1.5rem; }
-      .px-12 { padding-left: 2rem; padding-right: 2rem; }
-      .grid-cols-3 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-    }
-
-    body.day-mode {
-      background: radial-gradient(160% 180% at 38% -10%, #eef3ff 0%, #d4dcff 45%, #a8b7ff 100%);
-      color: #0f172a;
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
     }
 
     [class*="text-white/"] {
-      color: rgba(255, 255, 255, 0.94) !important;
+      color: rgba(15, 23, 42, 0.88) !important;
     }
 
     /* שבת שלום overlay */
@@ -307,9 +72,9 @@
       content: "שבת שלום 🌙";
       position: fixed;
       inset: 0;
-      background: rgba(10, 10, 25, 0.85);
-      color: #f2c94c;
-      font-size: 6rem;
+      background: rgba(255, 247, 233, 0.92);
+      color: #b45309;
+      font-size: clamp(4rem, 8vw, 6rem);
       font-weight: 700;
       display: flex;
       justify-content: center;
@@ -335,7 +100,7 @@
       left: 0;
       right: 0;
       height: 6px;
-      background: linear-gradient(90deg, #8a7dff, #f6c870, #58d6ff);
+      background: linear-gradient(90deg, rgba(99, 102, 241, 0.85), rgba(249, 115, 22, 0.85), rgba(14, 165, 233, 0.85));
       transition: opacity 0.6s ease;
       opacity: 0;
     }
@@ -355,206 +120,160 @@
     }
 
     .dashboard-panel {
-      background: rgba(18, 20, 38, 0.72);
-      border: 1px solid rgba(120, 130, 205, 0.16);
-      border-radius: 2.5rem;
-      padding: clamp(2rem, 3vw, 3.5rem);
-      box-shadow: 0 44px 96px rgba(6, 9, 24, 0.55);
-      position: relative;
+      border-radius: 0;
+      padding: 0;
+      height: 100vh;
+      max-height: 100vh;
+      display: flex;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(226, 232, 255, 0.65));
       overflow: hidden;
-      backdrop-filter: blur(18px);
-    }
-
-    .dashboard-panel::before {
-      content: "";
-      position: absolute;
-      inset: -35% 15% auto;
-      height: 140%;
-      background: linear-gradient(120deg, rgba(138, 125, 255, 0.22), rgba(88, 214, 255, 0.16));
-      opacity: 0.45;
-      filter: blur(52px);
-      transform: translate3d(0, 0, 0);
-      animation: beamSweep 14s ease-in-out infinite;
-      pointer-events: none;
     }
 
     /* מבנה לוח */
     .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-      gap: clamp(1.5rem, 2vw, 2.5rem);
-      border-radius: 2rem;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
     }
 
     .dashboard-block {
-      padding: clamp(2rem, 2.4vw, 3rem);
+      display: none;
+      height: 100vh;
+      max-height: 100vh;
+      padding: 1rem;
       position: relative;
-      background: rgba(20, 23, 42, 0.92);
-      border: 1px solid rgba(120, 130, 205, 0.26);
-      border-radius: 1.85rem;
-      box-shadow: 0 26px 58px rgba(8, 10, 24, 0.48);
+      border: none;
+      justify-content: flex-start;
+      flex-direction: column;
+      gap: 0;
       overflow: hidden;
-      opacity: 0;
-      transform: translateY(28px) scale(0.98);
-      --animation-delay: 0s;
-      animation: panelReveal 0.9s var(--animation-delay) cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    .dashboard-block.is-active {
+      display: flex;
+      background: linear-gradient(150deg, rgba(255, 255, 255, 0.96), rgba(230, 237, 255, 0.9));
+      border-radius: 1rem;
+      border: 1px solid rgba(191, 219, 254, 0.5);
+      box-shadow: 0 26px 70px rgba(15, 23, 42, 0.18);
+      backdrop-filter: blur(28px);
+    }
+
+    .dashboard-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 1.25rem;
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .dashboard-card-item {
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.95), rgba(240, 247, 255, 0.9));
+      border: 1px solid rgba(191, 219, 254, 0.5);
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      box-shadow: 0 8px 24px rgba(148, 163, 184, 0.12), 0 2px 8px rgba(148, 163, 184, 0.08);
+      backdrop-filter: blur(20px);
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      gap: 0.75rem;
+    }
+
+    .dashboard-card-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(148, 163, 184, 0.18), 0 4px 12px rgba(148, 163, 184, 0.12);
+    }
+
+    .dashboard-card-item:first-child {
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.98), rgba(235, 243, 255, 0.95));
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 12px 32px rgba(99, 102, 241, 0.15), 0 4px 12px rgba(99, 102, 241, 0.1);
+    }
+
+    .dashboard-card-item:first-child .clock-display {
+      font-size: 3rem;
+      font-weight: 700;
+      color: rgba(15, 23, 42, 0.95);
+      text-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+    }
+
+    .dashboard-card-item .clock-display {
+      font-size: 2.5rem;
     }
 
     .dashboard-header {
-      grid-column: 1 / -1;
-      background: linear-gradient(135deg, rgba(138, 125, 255, 0.18), rgba(88, 214, 255, 0.12));
-      border: 1px solid rgba(138, 125, 255, 0.35);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.22);
     }
 
-    .dashboard-header-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 2.5rem;
-    }
-
-    .dashboard-header-stats {
-      margin-top: clamp(2rem, 2.4vw, 2.8rem);
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: clamp(1rem, 1.5vw, 1.8rem);
-    }
 
     .dashboard-stat-card {
-      background: rgba(24, 28, 54, 0.88);
-      border: 1px solid rgba(110, 120, 200, 0.28);
-      border-radius: 1.35rem;
-      padding: 1.4rem 1.6rem;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      background: linear-gradient(150deg, rgba(248, 250, 255, 0.9), rgba(234, 244, 255, 0.88));
+      border: 1px solid rgba(191, 219, 254, 0.55);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 16px 30px rgba(148, 163, 184, 0.18);
     }
 
     .dashboard-stat-card label,
     .dashboard-stat-card p {
       margin: 0;
+      font-size: 0.75rem;
     }
 
-    .dashboard-block::after {
-      content: "";
+    .dashboard-stat-card p.text-xl {
+      font-size: 0.9rem;
+    }
+
+    .city-toggle-wrapper {
       position: absolute;
-      inset: 0;
-      background: linear-gradient(130deg, rgba(138, 125, 255, 0.12), rgba(88, 214, 255, 0.08), transparent 70%);
-      opacity: 0;
-      transition: opacity 0.4s ease, transform 0.6s ease;
-      transform: translate3d(-8%, -8%, 0);
-      pointer-events: none;
+      top: 1rem;
+      left: 1rem;
+      z-index: 10;
     }
 
-    .dashboard-block:hover::after {
-      opacity: 1;
-      transform: translate3d(0, 0, 0);
+    .city-toggle-button-subtle {
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(191, 219, 254, 0.4);
+      color: rgba(15, 23, 42, 0.7);
+      cursor: pointer;
+      text-align: center;
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.7rem;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
     }
 
-    .dashboard-block:nth-of-type(1) { --animation-delay: 0.05s; }
-    .dashboard-block:nth-of-type(2) { --animation-delay: 0.18s; }
-    .dashboard-block:nth-of-type(3) { --animation-delay: 0.28s; }
-    .dashboard-block:nth-of-type(4) { --animation-delay: 0.38s; }
-    .dashboard-block:nth-of-type(5) { --animation-delay: 0.5s; }
-
-    .dashboard-clock,
-    .dashboard-weather,
-    .dashboard-shabbat,
-    .dashboard-news {
-      display: flex;
-      flex-direction: column;
-      gap: clamp(1.2rem, 1.6vw, 2rem);
-      min-height: 100%;
+    .city-toggle-button-subtle:hover {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(99, 102, 241, 0.4);
+      color: rgba(15, 23, 42, 0.9);
     }
 
-    .dashboard-news {
-      justify-content: space-between;
-    }
-
-    .clock-display {
-      font-size: clamp(4.2rem, 5.2vw, 6.2rem);
-    }
-
-    .news-summary {
-      font-size: clamp(1rem, 0.6vw + 1rem, 1.3rem);
-    }
-
-    .news-list-item {
-      gap: clamp(1rem, 1.4vw, 1.6rem);
-      padding: clamp(1rem, 1.6vw, 1.6rem) clamp(1.2rem, 1.8vw, 1.8rem);
-    }
-
-    .news-list-title {
-      font-size: clamp(1rem, 0.4vw + 1rem, 1.25rem);
-    }
-
-    .news-source {
-      font-size: clamp(0.85rem, 0.3vw + 0.85rem, 1rem);
-    }
-
-    .news-toolbar {
-      gap: clamp(1rem, 1.4vw, 1.6rem);
-    }
-
-    footer {
-      width: 100%;
-      max-width: min(1720px, 92vw);
-      margin: clamp(2.5rem, 4vw, 4rem) auto clamp(2.5rem, 4vw, 4rem);
-      padding: clamp(1.8rem, 2.2vw, 2.6rem) clamp(2.2rem, 3vw, 3.2rem);
-      border-radius: 2.2rem;
-      gap: clamp(1rem, 2vw, 2.5rem);
-    }
-
-    @media (min-width: 1600px) {
-      .dashboard-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .dashboard-clock {
-        grid-column: 1 / span 1;
-        grid-row: 2;
-      }
-
-      .dashboard-shabbat {
-        grid-column: 2 / span 1;
-        grid-row: 2;
-      }
-
-      .dashboard-weather {
-        grid-column: 3 / span 1;
-        grid-row: 2;
-      }
-
-      .dashboard-news {
-        grid-column: 1 / span 3;
-        grid-row: 3;
-      }
+    .city-toggle-button-subtle:active {
+      transform: scale(0.98);
     }
 
     @media (max-width: 1024px) {
-      main {
-        padding: 2rem 1.5rem;
-      }
-
-      .max-w-7xl {
-        max-width: 100%;
-      }
-
-      footer {
-        flex-direction: column;
-        text-align: center;
-        gap: 1rem;
-      }
-
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-
       .dashboard-block {
-        padding: 2rem;
+        padding: 1rem;
+        border-radius: 0;
       }
 
-      .dashboard-header-stats {
+      .dashboard-block.is-active {
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .dashboard-cards-grid {
         grid-template-columns: 1fr;
-        gap: 1.2rem;
+        grid-template-rows: auto;
+        gap: 1rem;
       }
     }
 
@@ -564,42 +283,24 @@
       border-radius: 1.55rem;
       box-shadow: var(--panel-shadow);
       backdrop-filter: blur(28px);
-      transition: background 0.6s ease, border-color 0.4s ease, box-shadow 0.6s ease, transform 0.4s ease;
-    }
-
-    button.glass {
-      background: linear-gradient(135deg, rgba(138, 125, 255, 0.28), rgba(88, 214, 255, 0.2));
-      border-color: rgba(138, 125, 255, 0.52);
-    }
-
-    .glass:hover {
-      background: rgba(28, 30, 54, 0.92);
-      border-color: rgba(138, 125, 255, 0.45);
-      box-shadow: 0 46px 92px rgba(10, 16, 38, 0.6);
-      transform: translateY(-2px);
-    }
-
-    button.glass:hover,
-    button.glass:focus-visible {
-      background: linear-gradient(140deg, rgba(138, 125, 255, 0.32), rgba(246, 200, 112, 0.24));
-      border-color: rgba(246, 200, 112, 0.55);
     }
 
     .clock-display {
-      font-size: clamp(3.75rem, 4.2vw, 5.2rem);
-      letter-spacing: 0.18em;
+      font-size: 2.5rem;
+      letter-spacing: 0.1em;
       font-weight: 600;
       line-height: 1.2;
-      text-shadow: 0 0 28px rgba(138, 125, 255, 0.4), 0 0 16px rgba(88, 214, 255, 0.28);
     }
 
     .progress-frame {
       width: 100%;
-      height: 0.55rem;
-      background: rgba(91, 97, 146, 0.2);
+      height: 0.6rem;
+      background: rgba(148, 163, 184, 0.15);
       border-radius: 999px;
       overflow: hidden;
       position: relative;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(191, 219, 254, 0.2);
     }
 
     .progress-fill {
@@ -607,25 +308,42 @@
       inset: 0;
       width: 0;
       border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-      transition: width 0.6s ease;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .shabbat-countdown {
+      display: block;
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: rgba(15, 23, 42, 0.95);
+      line-height: 1.2;
+      letter-spacing: 0.1em;
+      font-variant-numeric: tabular-nums;
+      margin-top: 1rem;
+    }
+
+    .shabbat-countdown.hidden {
+      display: none;
     }
 
     .select-control {
       width: 100%;
-      background: linear-gradient(180deg, rgba(38, 40, 62, 0.95), rgba(25, 28, 49, 0.9));
-      border: 1px solid rgba(132, 139, 196, 0.45);
+      background: linear-gradient(180deg, rgba(248, 250, 255, 0.95), rgba(233, 238, 255, 0.9));
+      border: 1px solid rgba(191, 219, 254, 0.6);
       border-radius: 1rem;
       padding: 0.75rem 1rem;
-      color: rgba(232, 236, 255, 0.95);
+      color: rgba(15, 23, 42, 0.8);
       font-size: 1.05rem;
       transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
     }
 
     .select-control:focus {
       outline: none;
-      border-color: rgba(138, 125, 255, 0.65);
-      box-shadow: 0 0 0 4px rgba(138, 125, 255, 0.18);
+      border-color: rgba(99, 102, 241, 0.65);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
     }
 
     .select-control option {
@@ -633,50 +351,48 @@
       background: #f8fafc;
     }
 
-    body.day-mode .select-control {
+    body.light-mode .select-control {
       background: rgba(244, 247, 255, 0.95);
       color: #0f172a;
       border-color: rgba(148, 163, 184, 0.45);
     }
 
-    body.day-mode .select-control:focus {
+    body.light-mode .select-control:focus {
       border-color: rgba(79, 70, 229, 0.55);
       box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
     }
 
     .heading-glow {
       display: inline-flex;
-      gap: 0.8rem;
+      gap: 0.5rem;
       align-items: center;
       font-weight: 600;
       position: relative;
       color: var(--text-primary);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: inherit;
-      text-shadow: 0 0 18px rgba(138, 125, 255, 0.35);
+      font-size: 1.1rem;
     }
 
-    .heading-glow::before {
-      content: "";
-      width: 0.5rem;
-      height: 0.5rem;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(246, 200, 112, 0.95) 0%, rgba(138, 125, 255, 0.65) 70%, transparent 100%);
-      box-shadow: 0 0 18px rgba(246, 200, 112, 0.75);
+    .dashboard-card-item:first-child .heading-glow {
+      font-size: 1.25rem;
+      color: rgba(15, 23, 42, 0.95);
     }
 
     .heading-glow::after {
       content: "";
       display: block;
-      height: 3px;
+      height: 2px;
       flex: 1;
       border-radius: 999px;
-      background: linear-gradient(90deg, rgba(138, 125, 255, 0.7), rgba(246, 200, 112, 0.6), rgba(88, 214, 255, 0.65));
+      background: linear-gradient(90deg, rgba(99, 102, 241, 0.7), rgba(249, 115, 22, 0.55), rgba(14, 165, 233, 0.6));
       opacity: 0.75;
     }
 
-    body.day-mode .heading-glow::after {
+    .dashboard-card-item:first-child .heading-glow::after {
+      height: 3px;
+      opacity: 0.9;
+    }
+
+    body.light-mode .heading-glow::after {
       background: linear-gradient(90deg, rgba(79, 70, 229, 0.6), rgba(249, 115, 22, 0.6), rgba(14, 165, 233, 0.6));
     }
 
@@ -693,6 +409,17 @@
       color: var(--text-primary);
     }
 
+    .dashboard-card-item h2,
+    .dashboard-card-item h3 {
+      color: rgba(15, 23, 42, 0.9);
+      font-weight: 600;
+    }
+
+    .dashboard-card-item p,
+    .dashboard-card-item span {
+      color: rgba(15, 23, 42, 0.85);
+    }
+
     .active-city-label {
       color: var(--accent-tertiary);
       font-weight: 600;
@@ -700,36 +427,26 @@
     }
 
     .news-highlight {
-      min-height: 8rem;
+      min-height: 3.5rem;
       display: flex;
       flex-direction: column;
-      gap: 0.9rem;
+      gap: 0.25rem;
       position: relative;
-      padding: 1.5rem;
-      border-radius: 1.25rem;
-      background: rgba(25, 27, 45, 0.9);
-      border: 1px solid rgba(120, 130, 205, 0.28);
-      box-shadow: 0 16px 32px rgba(6, 9, 22, 0.32);
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.96), rgba(235, 243, 255, 0.9));
+      border: 1px solid rgba(191, 219, 254, 0.55);
+      box-shadow: 0 20px 38px rgba(148, 163, 184, 0.22);
       overflow: hidden;
-    }
-
-    .news-highlight::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.22), transparent 60%);
-      transform: translateX(-120%);
-      opacity: 0;
-      animation: shimmerSweep 12s ease-in-out infinite;
     }
 
     .news-highlight::after {
       content: "";
       position: absolute;
-      inset: 2px;
+      inset: 0;
       border-radius: inherit;
       pointer-events: none;
-      background: linear-gradient(120deg, rgba(138, 125, 255, 0.08), rgba(246, 200, 112, 0.06), rgba(88, 214, 255, 0.08));
+      background: radial-gradient(120% 120% at 80% 20%, rgba(99, 102, 241, 0.08), rgba(14, 165, 233, 0.04), transparent);
       opacity: 0;
       transition: opacity 0.4s ease;
     }
@@ -742,93 +459,95 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 0.85rem;
-      letter-spacing: 0.08em;
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(15, 23, 42, 0.55);
     }
 
     .news-index {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 2.5rem;
-      padding: 0.25rem 0.6rem;
+      min-width: 1.5rem;
+      padding: 0.15rem 0.4rem;
       border-radius: 999px;
-      background: rgba(88, 214, 255, 0.18);
-      color: rgba(255, 255, 255, 0.78);
+      background: rgba(99, 102, 241, 0.12);
+      color: rgba(55, 48, 163, 0.9);
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.7rem;
     }
 
     .news-summary {
-      font-size: clamp(1rem, 0.5vw + 1rem, 1.28rem);
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.9);
-      text-shadow: 0 0 12px rgba(15, 35, 72, 0.6);
+      font-size: 0.75rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
     }
 
     .news-grid {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 0.5rem;
+      flex: 1;
+      min-height: 0;
     }
 
     .news-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 0.85rem;
+      gap: 0.5rem;
       margin: 0;
       padding: 0;
+      max-height: 120px;
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
     }
 
     .news-list-item {
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      gap: clamp(1rem, 1.4vw, 1.6rem);
-      padding: clamp(1rem, 1.6vw, 1.6rem) clamp(1.2rem, 1.8vw, 1.8rem);
-      border-radius: 1rem;
-      background: rgba(20, 23, 42, 0.9);
-      border: 1px solid rgba(100, 110, 190, 0.22);
-      transition: border-color 0.35s ease, box-shadow 0.4s ease, transform 0.35s ease;
-      box-shadow: 0 12px 28px rgba(8, 12, 28, 0.38);
-      backdrop-filter: blur(12px);
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(191, 219, 254, 0.4);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .news-list-item:hover {
-      border-color: rgba(138, 125, 255, 0.45);
-      box-shadow: 0 22px 44px rgba(10, 12, 28, 0.48);
-      transform: translateY(-3px);
+      border-color: rgba(99, 102, 241, 0.45);
+      box-shadow: 0 18px 30px rgba(148, 163, 184, 0.2);
     }
 
     .news-rank {
-      width: 1.9rem;
-      height: 1.9rem;
+      width: 1.25rem;
+      height: 1.25rem;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(138, 125, 255, 0.22);
-      color: rgba(255, 255, 255, 0.88);
+      background: rgba(99, 102, 241, 0.15);
+      color: rgba(55, 48, 163, 0.9);
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.65rem;
     }
 
     .news-list-title {
       font-weight: 600;
-      font-size: 0.98rem;
-      line-height: 1.45;
-      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.75rem;
+      line-height: 1.3;
+      color: var(--text-primary);
     }
 
     .news-source {
-      font-size: 0.82rem;
-      padding: 0.2rem 0.6rem;
+      font-size: 0.65rem;
+      padding: 0.15rem 0.4rem;
       border-radius: 999px;
-      background: rgba(88, 214, 255, 0.18);
-      color: rgba(255, 255, 255, 0.78);
+      background: rgba(14, 165, 233, 0.12);
+      color: rgba(15, 23, 42, 0.7);
       white-space: nowrap;
     }
 
@@ -836,148 +555,169 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1.25rem;
+      margin-bottom: 0.5rem;
     }
 
     .news-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.6rem;
-      padding: 0.35rem 0.75rem;
+      gap: 0.4rem;
+      padding: 0.2rem 0.5rem;
       border-radius: 999px;
-      background: rgba(138, 125, 255, 0.16);
-      color: rgba(255, 255, 255, 0.78);
-      font-size: 0.78rem;
-      letter-spacing: 0.1em;
+      background: rgba(99, 102, 241, 0.12);
+      color: rgba(55, 48, 163, 0.8);
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      box-shadow: 0 0 18px rgba(138, 125, 255, 0.3);
     }
 
     .news-badge::before {
       content: "";
-      width: 0.35rem;
-      height: 0.35rem;
+      width: 0.25rem;
+      height: 0.25rem;
       border-radius: 999px;
       background: var(--accent-tertiary);
-      box-shadow: 0 0 8px rgba(88, 214, 255, 0.5);
+      box-shadow: 0 0 8px rgba(14, 165, 233, 0.45);
     }
 
     .news-list .panel-soft {
-      padding: 0.9rem 1.1rem;
-      border-radius: 1rem;
-      background: rgba(24, 28, 54, 0.78);
-      border: 1px solid rgba(110, 120, 200, 0.18);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      background: rgba(248, 250, 255, 0.95);
+      border: 1px solid rgba(191, 219, 254, 0.35);
       text-align: center;
-      color: rgba(255, 255, 255, 0.78);
+      color: rgba(15, 23, 42, 0.7);
+      font-size: 0.7rem;
+    }
+
+    main {
+      padding: 0 !important;
+      margin: 0 !important;
+      height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+    }
+
+    .max-w-7xl {
+      max-width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    .dashboard-panel {
+      border-radius: 0;
+      padding: 0;
+      height: 100vh;
+      max-height: 100vh;
+      display: flex;
+    }
+
+    .dashboard-grid {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .dashboard-block {
+      display: none;
+      min-height: 100vh;
+      padding: 6vh 8vw;
+      border: none !important;
+      justify-content: center;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .dashboard-block.is-active {
+      display: flex;
+    }
+
+    footer,
+    .shabbat-bar {
+      display: none !important;
     }
 
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col light-mode">
 
-  <main class="flex-1 px-16 py-10">
-    <div class="ambient-lights" aria-hidden="true">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-    <div class="max-w-7xl mx-auto">
+  <main class="flex-1 p-0">
+    <div class="max-w-7xl h-full">
       <section class="dashboard-panel glass fade-in">
         <div class="dashboard-grid">
-            <!-- Header -->
-            <div class="dashboard-block dashboard-header">
-              <div class="dashboard-header-top">
-                <div>
-                  <div class="badge flex items-center gap-2 mb-2">
-                    <span class="w-2 h-2 rounded-full bg-aurum animate-pulse"></span> שבת חיה · LIVE
+          <!-- Header with all cards -->
+          <div class="dashboard-block dashboard-header is-active">
+            <!-- City toggle - subtle in top right corner -->
+            <div class="city-toggle-wrapper">
+              <button id="cityToggleButton" class="city-toggle-button-subtle">
+                <span id="cityToggleText">אליכין</span>
+              </button>
+            </div>
+            
+            <!-- All cards grid -->
+            <div class="dashboard-cards-grid">
+              <!-- שעון -->
+              <div class="dashboard-card-item text-center">
+                <h2 class="text-lg font-semibold mb-2 heading-glow">שעון חי</h2>
+                <div id="clockDisplay" class="clock-display tabular-nums"></div>
+                <div id="nextEvent" class="text-sm text-white/90 mt-2 font-medium"></div>
+                <div class="mt-4 pt-3 border-t border-white/25">
+                  <div class="text-xs text-white/70 mb-1.5 font-medium">תאריך לועזי</div>
+                  <div id="gregorianDate" class="text-sm font-semibold mb-3 text-white/90"></div>
+                  <div class="text-xs text-white/70 mb-1.5 font-medium">תאריך עברי</div>
+                  <div id="hebrewDate" class="text-sm font-semibold text-white/90"></div>
+                </div>
+              </div>
+
+              <!-- מזג אוויר -->
+              <div class="dashboard-card-item text-right">
+                <h2 class="text-lg font-semibold mb-1 heading-glow">מזג אוויר</h2>
+                <p id="weatherLocation" class="text-white/80 text-xs mb-3 font-medium">מתעדכן לפי העיר</p>
+                <div class="flex justify-between items-center mb-3">
+                  <p id="currentWeatherSummary" class="text-sm text-white/90 font-medium"></p>
+                  <p id="currentWeatherTemp" class="text-3xl font-bold text-white/95"></p>
+                </div>
+                <ul id="weatherForecastList" class="grid grid-cols-3 gap-2 text-white/95 text-xs"></ul>
+              </div>
+
+              <!-- זמני שבת -->
+              <div class="dashboard-card-item text-right">
+                <h2 class="text-lg font-semibold mb-1 heading-glow">זמני שבת</h2>
+                <p id="parasha" class="text-sm text-white/90 mb-3 font-semibold"></p>
+                <p class="text-xs mb-2 text-white/85"><strong>כניסת שבת:</strong> <span id="candleLighting" class="font-semibold">—</span></p>
+                <p class="text-xs mb-2 text-white/85"><strong>צאת שבת:</strong> <span id="havdalah" class="font-semibold">—</span></p>
+                <p id="shabbatStatus" class="text-sm mt-3 font-semibold text-white/90"></p>
+                <!-- Countdown to Shabbat -->
+                <div id="shabbatCountdown" class="shabbat-countdown mt-3 hidden"></div>
+              </div>
+
+              <!-- חדשות -->
+              <div class="dashboard-card-item text-right">
+                <h2 class="text-lg font-semibold mb-1 heading-glow">חדשות</h2>
+                <div class="news-toolbar mb-1">
+                  <span class="news-badge">עדכוני מערכת</span>
+                </div>
+                <div class="news-grid">
+                  <div class="panel-soft news-highlight" id="newsHighlightCard">
+                    <div class="news-meta">
+                      <span id="newsSource">מערכת</span>
+                      <span id="newsIndexIndicator" class="news-index"></span>
+                    </div>
+                    <h3 id="newsHeadline" class="text-sm">אין כותרות זמינות כרגע</h3>
+                    <p id="newsSummary" class="news-summary text-xs">ניסיון נוסף יתבצע בעוד מספר רגעים.</p>
                   </div>
-                  <h1 class="text-5xl font-bold heading-glow">שבת שלום TV</h1>
-                  <p class="text-lg text-white/95 mt-2">חוויית שבת חיה למסכי הבית והקהילה</p>
-                </div>
-                <button id="fullscreenButton" class="glass px-4 py-2 rounded-full">מסך מלא</button>
-              </div>
-              <div class="dashboard-header-stats">
-                <div class="dashboard-stat-card text-right">
-                  <p class="text-sm text-white/88">תאריך לועזי</p>
-                  <p id="gregorianDate" class="text-xl font-medium mt-1"></p>
-                </div>
-                <div class="dashboard-stat-card text-right">
-                  <p class="text-sm text-white/88">תאריך עברי</p>
-                  <p id="hebrewDate" class="text-xl font-medium mt-1"></p>
-                </div>
-                <div class="dashboard-stat-card text-right">
-                  <label class="text-sm text-white/88 block mb-2">בחרו עיר</label>
-                  <select id="citySelect" class="select-control"></select>
+                  <ul id="newsList" class="news-list"></ul>
                 </div>
               </div>
-              <p class="mt-4 text-white/92 text-sm">עיר פעילה: <span id="activeCityLabel" class="active-city-label">אליכין</span></p>
             </div>
-
-            <!-- שעון -->
-            <div class="dashboard-block dashboard-clock text-center">
-              <h2 class="text-4xl font-semibold mb-4 heading-glow">שעון חי</h2>
-              <div id="clockDisplay" class="clock-display tabular-nums"></div>
-              <div id="nextEvent" class="text-2xl text-white/95 mt-3"></div>
-            </div>
-
-            <!-- מזג אוויר -->
-            <div class="dashboard-block dashboard-weather text-right">
-              <h2 class="text-4xl font-semibold mb-2 heading-glow">מזג אוויר</h2>
-              <p id="weatherLocation" class="text-white/92 text-lg mb-4">מתעדכן לפי העיר</p>
-              <div class="flex justify-between items-center mb-4">
-                <p id="currentWeatherSummary" class="text-2xl text-white/96"></p>
-                <p id="currentWeatherTemp" class="text-5xl font-bold"></p>
-              </div>
-              <ul id="weatherForecastList" class="grid grid-cols-3 gap-6 text-white/95"></ul>
-            </div>
-
-            <!-- זמני שבת -->
-            <div class="dashboard-block dashboard-shabbat text-right">
-              <h2 class="text-4xl font-semibold mb-3 heading-glow">זמני שבת</h2>
-              <p id="parasha" class="text-xl text-white/92 mb-3"></p>
-              <p class="text-lg"><strong>כניסת שבת:</strong> <span id="candleLighting">—</span></p>
-              <p class="text-lg"><strong>צאת שבת:</strong> <span id="havdalah">—</span></p>
-              <p id="shabbatStatus" class="text-xl mt-4"></p>
-              <div class="progress-frame mt-4">
-                <span id="timeProgressFill" class="progress-fill"></span>
-              </div>
-            </div>
-
-            <!-- חדשות -->
-            <div class="dashboard-block dashboard-news text-right">
-              <h2 class="text-4xl font-semibold mb-3 heading-glow">חדשות</h2>
-              <div class="news-toolbar">
-                <span class="news-badge">עדכוני מערכת</span>
-                <button id="refreshNewsButton" class="glass px-4 py-2 rounded-full text-sm">רענון חדשות</button>
-              </div>
-              <div class="news-grid">
-                <div class="panel-soft news-highlight" id="newsHighlightCard">
-                  <div class="news-meta">
-                    <span id="newsSource">מערכת</span>
-                    <span id="newsIndexIndicator" class="news-index"></span>
-                  </div>
-                  <h3 id="newsHeadline">אין כותרות זמינות כרגע</h3>
-                  <p id="newsSummary" class="news-summary">ניסיון נוסף יתבצע בעוד מספר רגעים.</p>
-                </div>
-                <ul id="newsList" class="news-list"></ul>
-              </div>
-            </div>
+          </div>
         </div>
       </section>
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="glass mx-10 mb-8 rounded-3xl px-12 py-6 flex justify-between items-center fade-in">
-    <div>
-      <p class="text-aurum text-xl font-semibold heading-glow">שבת שלום ומבורך</p>
-      <p class="text-white/92">מסך חי · מתעדכן בזמן אמת</p>
-    </div>
-    <div class="flex gap-3">
-      <span class="px-3 py-1 rounded-full bg-white/10 text-sm">Auto Refresh</span>
-      <span class="px-3 py-1 rounded-full bg-white/10 text-sm">Kiosk Ready</span>
-    </div>
-  </footer>
+  <!-- Footer - Hidden -->
+  <footer class="hidden"></footer>
 
   <!-- פס שבת -->
   <div class="shabbat-bar"></div>
@@ -1034,6 +774,7 @@
           news: 15 * 60 * 1000,
           calendar: 60 * 60 * 1000,
           newsRotation: 15000,
+          cards: 15000,
         },
         rssFeeds: [
           { name: "Ynet", url: `https://api.allorigins.win/raw?url=${encodeURIComponent("https://www.ynet.co.il/Integration/StoryRss1854.xml")}` },
@@ -1065,9 +806,12 @@
         hebrewDate: document.getElementById("hebrewDate"),
         citySelect: document.getElementById("citySelect"),
         activeCityLabel: document.getElementById("activeCityLabel"),
+        cityToggleButton: document.getElementById("cityToggleButton"),
+        cityToggleText: document.getElementById("cityToggleText"),
         candleLighting: document.getElementById("candleLighting"),
         havdalah: document.getElementById("havdalah"),
         shabbatStatus: document.getElementById("shabbatStatus"),
+        shabbatCountdown: document.getElementById("shabbatCountdown"),
         parasha: document.getElementById("parasha"),
         timeProgressFill: document.getElementById("timeProgressFill"),
         weatherLocation: document.getElementById("weatherLocation"),
@@ -1197,6 +941,9 @@
           if (DOM.activeCityLabel) {
             DOM.activeCityLabel.textContent = CityCatalog.label(AppState.cityId);
           }
+          if (DOM.cityToggleText) {
+            DOM.cityToggleText.textContent = CityCatalog.label(AppState.cityId);
+          }
         },
         toggleCityLoading(isLoading) {
           if (!DOM.citySelect) return;
@@ -1213,9 +960,6 @@
           if (DOM.havdalah) DOM.havdalah.textContent = havdalah ? Utils.formatTime(havdalah) : "—";
           if (DOM.parasha) DOM.parasha.textContent = parasha ? `פרשת ${parasha}` : "";
         },
-        setProgress(value) {
-          if (DOM.timeProgressFill) DOM.timeProgressFill.style.width = `${value}%`;
-        },
         renderWeather() {
           const { current, forecast } = AppState.weather;
           if (!current) return;
@@ -1231,11 +975,11 @@
             DOM.weatherForecastList.innerHTML = "";
             forecast.forEach((day) => {
               const li = document.createElement("li");
-              li.className = "p-3 rounded-xl bg-white/5 text-center";
+              li.className = "p-1 rounded-lg bg-white/5 text-center";
               li.innerHTML = `
-                <div>${Formatters.weekday.format(day.date)}</div>
-                <div class="text-lg">${WeatherDictionary.describe(day.code)}</div>
-                <div>${Math.round(day.max)}° / ${Math.round(day.min)}°</div>
+                <div class="text-xs">${Formatters.weekday.format(day.date)}</div>
+                <div class="text-xs">${WeatherDictionary.describe(day.code)}</div>
+                <div class="text-xs">${Math.round(day.max)}° / ${Math.round(day.min)}°</div>
               `;
               DOM.weatherForecastList.appendChild(li);
             });
@@ -1326,7 +1070,7 @@
 
       const Theme = {
         apply() {
-          document.body.classList.remove("day-mode");
+          document.body.classList.add("light-mode");
         },
       };
 
@@ -1338,7 +1082,7 @@
           if (!candleLighting || !havdalah) {
             if (DOM.shabbatStatus) DOM.shabbatStatus.textContent = "ממתין לזמני שבת";
             if (DOM.nextEvent) DOM.nextEvent.textContent = "";
-            UI.setProgress(0);
+            if (DOM.shabbatCountdown) DOM.shabbatCountdown.classList.add("hidden");
             document.body.classList.remove("shabbat-active");
             return;
           }
@@ -1353,6 +1097,7 @@
             next = `צאת שבת ב-${Utils.formatTime(havdalah)}${hoursLeft ? ` (כ-${hoursLeft} שעות)` : ""}`;
             progress = Utils.computeProgress(now, candleLighting, havdalah);
             document.body.classList.add("shabbat-active");
+            if (DOM.shabbatCountdown) DOM.shabbatCountdown.classList.add("hidden");
           } else if (now < candleLighting) {
             const startOfDay = new Date(now);
             startOfDay.setHours(0, 0, 0, 0);
@@ -1360,16 +1105,38 @@
             next = `כניסת שבת ב-${Utils.formatTime(candleLighting)}`;
             progress = Utils.computeProgress(now, startOfDay, candleLighting);
             document.body.classList.remove("shabbat-active");
+            this.renderCountdown(candleLighting, now);
           } else {
             label = "שבוע טוב 🌅";
             next = "השבת הסתיימה – שבוע נפלא!";
             progress = 100;
             document.body.classList.remove("shabbat-active");
+            if (DOM.shabbatCountdown) DOM.shabbatCountdown.classList.add("hidden");
           }
 
           if (DOM.shabbatStatus) DOM.shabbatStatus.textContent = label;
           if (DOM.nextEvent) DOM.nextEvent.textContent = next;
-          UI.setProgress(progress);
+        },
+        renderCountdown(targetTime, now) {
+          if (!DOM.shabbatCountdown) return;
+          
+          const diff = targetTime - now;
+          if (diff <= 0) {
+            DOM.shabbatCountdown.classList.add("hidden");
+            return;
+          }
+
+          DOM.shabbatCountdown.classList.remove("hidden");
+          
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+          const hoursStr = hours.toString().padStart(2, '0');
+          const minutesStr = minutes.toString().padStart(2, '0');
+          const secondsStr = seconds.toString().padStart(2, '0');
+          
+          DOM.shabbatCountdown.innerHTML = `${hoursStr}:${minutesStr}:${secondsStr}`;
         },
       };
 
@@ -1440,7 +1207,7 @@
             console.error("Shabbat API error", error);
             if (DOM.shabbatStatus) DOM.shabbatStatus.textContent = "תקלה בזמני שבת";
             if (DOM.nextEvent) DOM.nextEvent.textContent = "";
-            UI.setProgress(0);
+            if (DOM.shabbatCountdown) DOM.shabbatCountdown.classList.add("hidden");
           }
         },
       };
@@ -1569,6 +1336,31 @@
         },
       };
 
+      const CardRotator = {
+        blocks: [],
+        index: 0,
+        timer: null,
+        init() {
+          // All cards are now displayed together in the header, no rotation needed
+          const headerBlock = document.querySelector(".dashboard-block.dashboard-header");
+          if (headerBlock) {
+            headerBlock.classList.add("is-active");
+          }
+        },
+        start() {
+          // Disabled - all cards are shown together
+        },
+        stop() {
+          if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+          }
+        },
+        next() {
+          // Disabled - all cards are shown together
+        },
+      };
+
       const Clock = {
         tick() {
           const now = new Date();
@@ -1576,7 +1368,7 @@
             DOM.clockDisplay.textContent = Utils.formatTimeFull(now);
           }
           Theme.apply();
-          ShabbatStatus.update();
+          ShabbatStatus.update(); // Updates countdown every second
         },
       };
 
@@ -1596,6 +1388,7 @@
           this.timers.forEach((timer) => clearInterval(timer));
           this.timers.clear();
           NewsTicker.stop();
+          CardRotator.stop();
         },
         start() {
           this.register("clock", () => Clock.tick(), AppConfig.refresh.clock);
@@ -1606,37 +1399,30 @@
         },
       };
 
-        const App = {
-          async boot() {
-            UI.populateCities();
-            UI.updateActiveCityLabel();
-            this.bindEvents();
+      const App = {
+        async boot() {
+          UI.populateCities();
+          UI.updateActiveCityLabel();
+          this.bindEvents();
 
-            await this.initialFetch();
-            Clock.tick();
-            TaskRunner.start();
-          },
-          async initialFetch() {
-            UI.toggleCityLoading(true);
-            try {
-              await Promise.all([
-                CalendarService.load(true),
-                ShabbatService.load(true),
-                WeatherService.load(true),
-              ]);
-              this.scheduleNewsLoad(true);
-            } finally {
-              UI.toggleCityLoading(false);
-            }
-          },
-          scheduleNewsLoad(force = false) {
-            const trigger = () => NewsService.load(force);
-            if ("requestIdleCallback" in window) {
-              requestIdleCallback(() => trigger(), { timeout: 1200 });
-            } else {
-              setTimeout(trigger, 200);
-            }
-          },
+          CardRotator.init();
+          await this.initialFetch();
+          Clock.tick();
+          TaskRunner.start();
+        },
+        async initialFetch() {
+          UI.toggleCityLoading(true);
+          try {
+            await Promise.all([
+              CalendarService.load(true),
+              ShabbatService.load(true),
+              WeatherService.load(true),
+              NewsService.load(true),
+            ]);
+          } finally {
+            UI.toggleCityLoading(false);
+          }
+        },
         async changeCity(cityId) {
           if (cityId === AppState.cityId) return;
           AppState.cityId = cityId;
@@ -1657,6 +1443,14 @@
         bindEvents() {
           if (DOM.citySelect) {
             DOM.citySelect.addEventListener("change", (event) => this.changeCity(event.target.value));
+          }
+
+          if (DOM.cityToggleButton) {
+            DOM.cityToggleButton.addEventListener("click", () => {
+              const currentCity = AppState.cityId;
+              const nextCity = currentCity === "eliakhin" ? "mevasseret-zion" : "eliakhin";
+              this.changeCity(nextCity);
+            });
           }
 
           if (DOM.refreshNewsButton) {
